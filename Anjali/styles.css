@@ -1,0 +1,13 @@
+body{
+  padding: 25px;
+}
+.title {
+	color: #5C6AC4;
+}
+.product img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}

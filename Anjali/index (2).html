@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fashion Store</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f8f8f8;
+      text-align: center;
+      margin: 0;
+    }
+
+    h1 {
+      background: black;
+      color: white;
+      padding: 15px;
+      margin: 0;
+    }
+
+    h5 {
+      margin-top: 5px;
+      color: #555;
+    }
+
+    .products {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 20px;
+    }
+
+    .product {
+      background: white;
+      width: 220px;
+      margin: 15px;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .product:hover {
+      transform: scale(1.05);
+    }
+
+    .product img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 8px 12px;
+      background: black;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background: #444;
+    }
+
+    .remove-btn {
+      background: red;
+      margin-left: 10px;
+    }
+
+    .remove-btn:hover {
+      background: darkred;
+    }
+
+    #cart {
+      margin-top: 20px;
+    }
+
+    input, textarea, select {
+      padding: 8px;
+      width: 250px;
+      margin: 5px;
+    }
+
+    textarea {
+      resize: none;
+      height: 60px;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+  </style>
+</head>
+<body>
+
+<h1>🛍 Fashion Store</h1>
+<h4>CASH ON DELIVERY</h4>
+
+<h2>Products</h2>
+<div class="products" id="products"></div>
+
+<h2>🛒 Cart</h2>
+<div id="cart"></div>
+<h3 id="total"></h3>
+
+<h2>Checkout</h2>
+
+<form action="https://formsubmit.co/kusumanjalireddy0@gmail.com" method="POST" onsubmit="prepareOrder()">
+    
+    <input type="hidden" name="_subject" value="New Fashion Store Order">
+    <input type="hidden" name="_captcha" value="false">
+
+    <input type="hidden" name="Order Details" id="orderDetails">
+
+    <label>Your Name:</label><br>
+    <input type="text" name="Customer Name" required><br>
+
+    <label>Email:</label><br>
+    <input type="email" name="Customer Email" required><br>
+
+    <label>Address:</label><br>
+    <textarea name="Customer Address" required></textarea><br>
+
+    <button type="submit">Place Order</button>
+</form>
+
+<script>
+const products = [
+  { 
+    name: "T-Shirt", 
+    price: 799,
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab"
+  },
+  { 
+    name: "Jeans", 
+    price: 1499,
+    image: "https://images.unsplash.com/photo-1542272604-787c3835535d"
+  },
+  { 
+    name: "Jacket", 
+    price: 2999,
+    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5"
+  }
+];
+
+let cart = [];
+
+function loadProducts() {
+  const productDiv = document.getElementById("products");
+  productDiv.innerHTML = "";
+
+  products.forEach((product, index) => {
+    productDiv.innerHTML += `
+      <div class="product">
+        <img src="${product.image}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <p>₹${product.price}</p>
+        <button onclick="addToCart(${index})">Add to Cart</button>
+      </div>
+    `;
+  });
+}
+
+function addToCart(index) {
+  cart.push(products[index]);
+  displayCart();
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  displayCart();
+}
+
+function displayCart() {
+  const cartDiv = document.getElementById("cart");
+  const totalDiv = document.getElementById("total");
+
+  if (cart.length === 0) {
+    cartDiv.innerHTML = "<p>Your cart is empty</p>";
+    totalDiv.innerHTML = "";
+    return;
+  }
+
+  cartDiv.innerHTML = cart.map((item, index) => `
+    <div style="margin-bottom:10px;">
+      ${item.name} - ₹${item.price}
+      <button class="remove-btn" onclick="removeFromCart(${index})">
+        Remove
+      </button>
+    </div>
+  `).join("");
+
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  totalDiv.innerHTML = "<strong>Total: ₹" + total + "</strong>";
+}
+
+function prepareOrder() {
+  if (cart.length === 0) {
+    alert("Your cart is empty!");
+    event.preventDefault();
+    return;
+  }
+
+  let orderText = "";
+  cart.forEach(item => {
+    orderText += item.name + " - ₹" + item.price + "\n";
+  });
+
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  orderText += "\nTotal: ₹" + total;
+
+  document.getElementById("orderDetails").value = orderText;
+
+  cart = [];
+}
+
+loadProducts();
+</script>
+
+</body>
+</html>
